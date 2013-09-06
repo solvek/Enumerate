@@ -95,7 +95,7 @@
 
   engine = new Engine();
 
-  self.addEventListener('message', function(event) {
+  addEventListener('message', function(event) {
     var message;
     message = JSON.parse(event.data);
     return engine[message.method].apply(engine, message.args);

@@ -1,0 +1,12 @@
+{
+    "manifest_version": 2,
+    "name": "Enumerate",
+    "version": "0.1",
+
+    "permissions": [
+        "webRequest",
+        "file://*"
+    ],
+
+    "options_page": "index.html"
+}

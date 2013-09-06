@@ -56,6 +56,6 @@ class Engine
 engine = new Engine()
 #engine.start()
 
-self.addEventListener 'message', (event) ->
+addEventListener 'message', (event) ->
   message = JSON.parse(event.data)
   engine[message.method].apply(engine, message.args)

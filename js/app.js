@@ -33,7 +33,9 @@
       }
       this.options = options;
       this.invokeWorker('start', options);
-      return this.ui.progressbar.progressbar('option', 'max', this.options.ticks);
+      return this.ui.progressbar.progressbar({
+        max: this.options.ticks
+      });
     };
 
     EngineManager.prototype.log = function(message) {
@@ -86,16 +88,13 @@
       progressLabel: $('.progress-label')
     };
     enman = new EngineManager(ui);
-    $('#play').button({
+    return $('#play').button({
       text: false,
       icons: {
         primary: 'ui-icon-play'
       }
     }).click(function() {
       return enman.start();
-    });
-    return ui.progressbar.progressbar({
-      value: false
     });
   });
 

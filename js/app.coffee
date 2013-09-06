@@ -18,7 +18,7 @@ class EngineManager
     @options = options
     @invokeWorker('start', options)
 
-    @ui.progressbar.progressbar 'option', 'max', @options.ticks
+    @ui.progressbar.progressbar max : @options.ticks
 
   log: (message) ->
     console.log "Worker: #{message}"
@@ -65,5 +65,3 @@ $ ->
       icons: primary: 'ui-icon-play'
     )
     .click -> enman.start()
-
-  ui.progressbar.progressbar value: off
