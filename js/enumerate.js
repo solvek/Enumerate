@@ -57,7 +57,7 @@
 
     Engine.prototype.execute = function() {
       var _this = this;
-      if (this.idx < 20) {
+      if (this.idx < this._options.ticks) {
         this.trigger('onProgress', this.idx, [this.idx]);
         this.idx++;
         return setTimeout(function() {

@@ -1,5 +1,5 @@
 class EngineManager
-  constructor: (@solver) ->
+  constructor: (@ui, @solver) ->
     @worker = new Worker('js/enumerate.js')
     @worker.onmessage = (event) =>
       message = JSON.parse(event.data)
@@ -15,16 +15,23 @@ class EngineManager
       options = _.default(EngineManager.DEFAULT_OPTIONS)
     else
       options = EngineManager.DEFAULT_OPTIONS
+    @options = options
     @invokeWorker('start', options)
+
+    @ui.progressbar.progressbar 'option', 'max', @options.ticks
 
   log: (message) ->
     console.log "Worker: #{message}"
 
   onProgress: (ticks, values) ->
-    $('#status').html(EngineManager.printValues(values))
+    @ui.status.html(EngineManager.printValues(values))
+    @ui.progressbar.progressbar 'value', ticks
+    @ui.progressLabel.text "#{Math.floor(100.0*ticks/@options.ticks)}%"
 
   onComplete: ->
-    $('#status').html('Completed')
+    @ui.status.html 'Completed'
+    @ui.progressbar.progressbar 'value', @options.ticks
+    @ui.progressLabel.text 'Completed'
 
   invokeWorker: (method, args...) ->
     @worker.postMessage(JSON.stringify(
@@ -45,7 +52,12 @@ class EngineManager
       values.toString()
 
 $ ->
-  enman = new EngineManager()
+  ui =
+    status: $ '#status'
+    progressbar: $ '#progressbar'
+    progressLabel : $ '.progress-label'
+
+  enman = new EngineManager(ui)
 
   $('#play')
     .button(
@@ -53,3 +65,5 @@ $ ->
       icons: primary: 'ui-icon-play'
     )
     .click -> enman.start()
+
+  ui.progressbar.progressbar value: off

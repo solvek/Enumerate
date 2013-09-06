@@ -5,8 +5,9 @@
 
   EngineManager = (function() {
 
-    function EngineManager(solver) {
+    function EngineManager(ui, solver) {
       var _this = this;
+      this.ui = ui;
       this.solver = solver;
       this.worker = new Worker('js/enumerate.js');
       this.worker.onmessage = function(event) {
@@ -30,7 +31,9 @@
       } else {
         options = EngineManager.DEFAULT_OPTIONS;
       }
-      return this.invokeWorker('start', options);
+      this.options = options;
+      this.invokeWorker('start', options);
+      return this.ui.progressbar.progressbar('option', 'max', this.options.ticks);
     };
 
     EngineManager.prototype.log = function(message) {
@@ -38,11 +41,15 @@
     };
 
     EngineManager.prototype.onProgress = function(ticks, values) {
-      return $('#status').html(EngineManager.printValues(values));
+      this.ui.status.html(EngineManager.printValues(values));
+      this.ui.progressbar.progressbar('value', ticks);
+      return this.ui.progressLabel.text("" + (Math.floor(100.0 * ticks / this.options.ticks)) + "%");
     };
 
     EngineManager.prototype.onComplete = function() {
-      return $('#status').html('Completed');
+      this.ui.status.html('Completed');
+      this.ui.progressbar.progressbar('value', this.options.ticks);
+      return this.ui.progressLabel.text('Completed');
     };
 
     EngineManager.prototype.invokeWorker = function() {
@@ -72,15 +79,23 @@
   })();
 
   $(function() {
-    var enman;
-    enman = new EngineManager();
-    return $('#play').button({
+    var enman, ui;
+    ui = {
+      status: $('#status'),
+      progressbar: $('#progressbar'),
+      progressLabel: $('.progress-label')
+    };
+    enman = new EngineManager(ui);
+    $('#play').button({
       text: false,
       icons: {
         primary: 'ui-icon-play'
       }
     }).click(function() {
       return enman.start();
+    });
+    return ui.progressbar.progressbar({
+      value: false
     });
   });
 

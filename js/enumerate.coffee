@@ -27,7 +27,7 @@ class Engine
     @_enumerators = []
 
   execute: ->
-    if @idx < 20
+    if @idx < @_options.ticks
       @trigger('onProgress', @idx, [@idx])
       @idx++
       setTimeout(
