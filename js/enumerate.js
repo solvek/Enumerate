@@ -127,7 +127,7 @@
         };
       },
       toString: function(value) {
-        return "" + (String.fromCharCode(65 + value.x)) + (1 + value.y);
+        return "(" + (String.fromCharCode(65 + value.x)) + (1 + value.y) + ")";
       }
     };
 

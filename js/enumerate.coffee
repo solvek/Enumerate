@@ -84,7 +84,7 @@ class Engine
     toValue: (row) ->
       x: Math.floor(row / 8)
       y: row % 8
-    toString: (value) -> "#{String.fromCharCode(65+value.x)}#{1+value.y}"
+    toString: (value) -> "(#{String.fromCharCode(65+value.x)}#{1+value.y})"
 
   nextEnumerator: -> if @size < 8 then Engine.queenPosition
 
