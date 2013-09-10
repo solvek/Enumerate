@@ -22,12 +22,14 @@ One of the following values:
 ### Properties ###
 
  - **count** : Integer
- - **represent** : function(raw : Integer)
+ - **toValue** : function(raw : Integer)
+ - **toString**: function(value, raw: Integer)
 
 ## Engine ##
 Current engine. Solver's callbacks *this* is an Engine instance.
 ### Properties ###
 
+ - **size**: Integer - number of valid items ins @values array
  - **values** : Array[State]
  - **status** : Analyze - last analyze result
 
@@ -44,8 +46,8 @@ An *Engine* is passed as *this* to each event
 
  - **nextEnumerator() : Enumerator** - required
  - **analyze() : Analyze** - required
- - **onStateAdd(state: State)** - optional
- - **onStateRemove(state: State)** - optional
+ - **onStateAdd(state: State)** - optional. Called before adding a value
+ - **onStateRemove(state: State)** - optional. Called before removing a value
 
 ## EngineManager ##
 ### Events ###
