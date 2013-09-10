@@ -84,18 +84,18 @@ class Engine
     toValue: (row) ->
       x: Math.floor(row / 8)
       y: row % 8
-    toString: (value) -> "(#{String.fromCharCode(65+value.x)}#{1+value.y})"
+    toString: (value) -> "#{String.fromCharCode(65+value.x)}#{1+value.y}"
 
-  nextEnumerator: -> Engine.queenPosition
+  nextEnumerator: -> if @size < 8 then Engine.queenPosition
 
   analyze: ->
-    if @size == 8
-      Analyze.SUCCESS
+    if @isConflicted
+      Analyze.FAIL
     else
-      if @isConflicted
-        Analyze.FAIL
-      else
+      if @size < 8
         Analyze.UNDEFINED
+      else
+        Analyze.SUCCESS
 
   onStateRemove: -> @isConflicted = no
 

@@ -30,7 +30,7 @@ Current engine. Solver's callbacks *this* is an Engine instance.
 ### Properties ###
 
  - **size**: Integer - number of valid items ins @values array
- - **values** : Array[State]
+ - **values** : Array[State]. The actual length of the array can be bigger then size, size should be used as a correct amount of current values
  - **status** : Analyze - last analyze result
 
 Additionally this object can contain any other custom properties which can be used by Solver as a context.

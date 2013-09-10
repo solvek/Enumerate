@@ -127,22 +127,24 @@
         };
       },
       toString: function(value) {
-        return "(" + (String.fromCharCode(65 + value.x)) + (1 + value.y) + ")";
+        return "" + (String.fromCharCode(65 + value.x)) + (1 + value.y);
       }
     };
 
     Engine.prototype.nextEnumerator = function() {
-      return Engine.queenPosition;
+      if (this.size < 8) {
+        return Engine.queenPosition;
+      }
     };
 
     Engine.prototype.analyze = function() {
-      if (this.size === 8) {
-        return Analyze.SUCCESS;
+      if (this.isConflicted) {
+        return Analyze.FAIL;
       } else {
-        if (this.isConflicted) {
-          return Analyze.FAIL;
-        } else {
+        if (this.size < 8) {
           return Analyze.UNDEFINED;
+        } else {
+          return Analyze.SUCCESS;
         }
       }
     };

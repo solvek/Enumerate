@@ -12,16 +12,19 @@ class EngineManager
 
   start: (options) ->
     if options
-      options = _.default(EngineManager.DEFAULT_OPTIONS)
+      @options = _.defaults(options, EngineManager.DEFAULT_OPTIONS)
     else
-      options = EngineManager.DEFAULT_OPTIONS
-    @options = options
-    @invokeWorker('start', options)
+      @options = EngineManager.DEFAULT_OPTIONS
+    @invokeWorker('start', @options)
+    @ui.solutions.empty()
 
     @ui.progressbar.progressbar max : @options.ticks
 
   log: (message) ->
     console.log "Worker: #{message}"
+
+  onSolution: (values) ->
+   @ui.solutions.append("<li>#{EngineManager.printValues(values)}</li>")
 
   onProgress: (ticks, values) ->
     @ui.status.html(EngineManager.printValues(values))
@@ -56,6 +59,7 @@ $ ->
     status: $ '#status'
     progressbar: $ '#progressbar'
     progressLabel : $ '.progress-label'
+    solutions: $ '#solutions'
 
   enman = new EngineManager(ui)
 
@@ -64,4 +68,6 @@ $ ->
       text: no
       icons: primary: 'ui-icon-play'
     )
-    .click -> enman.start()
+    .click -> enman.start(all: $('#all').is(':checked'))
+
+  $('#all').button()

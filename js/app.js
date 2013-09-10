@@ -27,12 +27,12 @@
 
     EngineManager.prototype.start = function(options) {
       if (options) {
-        options = _["default"](EngineManager.DEFAULT_OPTIONS);
+        this.options = _.defaults(options, EngineManager.DEFAULT_OPTIONS);
       } else {
-        options = EngineManager.DEFAULT_OPTIONS;
+        this.options = EngineManager.DEFAULT_OPTIONS;
       }
-      this.options = options;
-      this.invokeWorker('start', options);
+      this.invokeWorker('start', this.options);
+      this.ui.solutions.empty();
       return this.ui.progressbar.progressbar({
         max: this.options.ticks
       });
@@ -40,6 +40,10 @@
 
     EngineManager.prototype.log = function(message) {
       return console.log("Worker: " + message);
+    };
+
+    EngineManager.prototype.onSolution = function(values) {
+      return this.ui.solutions.append("<li>" + (EngineManager.printValues(values)) + "</li>");
     };
 
     EngineManager.prototype.onProgress = function(ticks, values) {
@@ -85,17 +89,21 @@
     ui = {
       status: $('#status'),
       progressbar: $('#progressbar'),
-      progressLabel: $('.progress-label')
+      progressLabel: $('.progress-label'),
+      solutions: $('#solutions')
     };
     enman = new EngineManager(ui);
-    return $('#play').button({
+    $('#play').button({
       text: false,
       icons: {
         primary: 'ui-icon-play'
       }
     }).click(function() {
-      return enman.start();
+      return enman.start({
+        all: $('#all').is(':checked')
+      });
     });
+    return $('#all').button();
   });
 
 }).call(this);
