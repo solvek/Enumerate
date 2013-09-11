@@ -79,35 +79,39 @@ class Engine
   pureValues: -> @values.map (item) -> item.enumerator.toString(item.value, item.raw)
 
 ## Solver
-  @queenPosition =
-    count: 64
-    toValue: (row) ->
-      x: Math.floor(row / 8)
-      y: row % 8
-    toString: (value) -> "(#{String.fromCharCode(65+value.x)}#{1+value.y})"
+  @maxSum = 226
 
-  nextEnumerator: -> if @size < 8 then Engine.queenPosition
+  @first =
+    count: 9
+    toValue: (row) -> 24 + row
+    toString: (value) -> "(#{value})"
+
+  @rest = (prev) ->
+    count: 2
+    toValue: (row) -> prev + row*2-1
+    toString: (value) -> "(#{value})"
+
+  nextEnumerator: ->
+    if @size < 8
+      if @size == 0
+        Engine.first
+      else
+        Engine.rest(@values[@size-1].value)
 
   analyze: ->
-    if @isConflicted
+    @sum = 0 if @sum==undefined
+    if @sum > Engine.maxSum
       Analyze.FAIL
+    else if @size == 8 and @sum == Engine.maxSum
+      Analyze.SUCCESS
     else
-      if @size < 8
-        Analyze.UNDEFINED
-      else
-        Analyze.SUCCESS
+      Analyze.UNDEFINED
 
-  onStateRemove: -> @isConflicted = no
+  onStateRemove: (state) -> @sum -= state.value
 
   onStateAdd: (state) ->
-    for idx in [0...@size]
-      other = @values[idx]
-      difx = state.value.x - other.value.x
-      dify = state.value.y - other.value.y
-      if state.value.x == other.value.x or state.value.y == other.value.y or difx == dify or difx == - dify
-        @isConflicted = yes
-        return
-    return
+    @sum = 0 if @sum==undefined
+    @sum += state.value
 
 engine = new Engine()
 
